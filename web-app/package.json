@@ -4,7 +4,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "dev:fast": "vite --host",
+    "build": "vite build",
+    "build:check": "tsc && vite build",
     "preview": "vite preview",
     "seed": "tsx scripts/seedDemoData.ts"
   },

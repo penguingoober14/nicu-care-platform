@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { mockDataStore } from '../config/mockData';
+import { mockDataStore } from '../data';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { ROLE_DISPLAY_NAMES } from '../types';
 

@@ -24,7 +24,7 @@ import {
 } from '@mui/material';
 import { Timestamp } from 'firebase/firestore';
 import { format } from 'date-fns';
-import { mockDataStore, DEMO_MEDICATIONS, DEMO_FEEDS } from '../../config/mockData';
+import { mockDataStore, DEMO_MEDICATIONS, DEMO_FEEDS } from '../../data';
 import type { Baby, FeedingRecord } from '../../types';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 

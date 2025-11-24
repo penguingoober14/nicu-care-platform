@@ -26,7 +26,7 @@ import {
   Alert,
 } from '@mui/material';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { mockDataStore } from '../../config/mockData';
+import { mockDataStore } from '../../data';
 import type { Baby, BloodGasResult } from '../../types';
 
 interface RespiratorySupportProps {

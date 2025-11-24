@@ -23,7 +23,7 @@ import {
   ListItemText,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { mockDataStore } from '../../config/mockData';
+import { mockDataStore } from '../../data';
 import type { Baby } from '../../types';
 
 interface LinesTubesProps {

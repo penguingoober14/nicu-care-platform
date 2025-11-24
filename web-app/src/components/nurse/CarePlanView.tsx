@@ -11,7 +11,7 @@ import {
   Grid,
 } from '@mui/material';
 import { format } from 'date-fns';
-import { mockDataStore } from '../../config/mockData';
+import { mockDataStore } from '../../data';
 import type { Baby } from '../../types';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 

@@ -5,6 +5,7 @@ export * from './user';
 export * from './clinical';
 export * from './procedures';
 export * from './discharge';
+export * from './tasks';
 
 // Baby types (Extended for NHS compliance)
 export interface Baby {

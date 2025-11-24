@@ -21,9 +21,13 @@ import type {
   AdmissionAssessment,
   SampleCollectionMetadata,
   TransfusionRecord,
-  PhototherapyRecord
+  PhototherapyRecord,
+  EnhancedCarePlan,
+  NursingTask,
+  TaskCompletionSummary
 } from '../types';
 import { ROLE_PERMISSIONS } from '../types';
+import { generateAllTasks } from '../utils/taskGenerator';
 
 // Helper to create timestamps
 const now = () => Timestamp.now();
@@ -1675,6 +1679,287 @@ export const DEMO_SAMPLES: SampleCollectionMetadata[] = [
   },
 ];
 
+// Enhanced Care Plans (Ward Round-Driven)
+export const DEMO_ENHANCED_CARE_PLANS: EnhancedCarePlan[] = [
+  // Daisy's Enhanced Care Plan (version 2 - feeding plan)
+  {
+    id: 'enhanced-care-plan-daisy-v2',
+    babyId: 'daisy',
+    version: 2,
+    wardRoundDate: daysAgo(1),
+    supersedes: 'enhanced-care-plan-daisy-v1',
+    category: 'comprehensive',
+    title: 'Comprehensive Care Plan - Daisy',
+    description: 'Feeding advancement, routine observations, and developmental care for 32+4 week infant',
+    prescribedBy: 'emma-consultant',
+    approvedBy: 'emma-consultant',
+    reviewDate: now(),
+    status: 'active',
+    effectiveFrom: daysAgo(1),
+    feedingPlan: {
+      frequency: 3, // 3-hourly
+      volumePerFeed: 40, // ml
+      feedType: 'fortified_EBM',
+      route: 'NG_tube',
+      fortification: {
+        type: 'Nutriprem Breast Milk Fortifier',
+        scoopsPer100ml: 2,
+      },
+      specialInstructions: ['Check aspirates before each feed', 'Advance by 5ml if well tolerated'],
+      aspirateBeforeFeed: true,
+      minimumInterval: 2.5,
+    },
+    medicationPlan: {
+      prescriptionIds: ['caffeine-daisy', 'vitamin-d-daisy'],
+      administrationGuidelines: 'Caffeine can be given in feeds. Vitamin D to be given separately.',
+    },
+    observationPlan: {
+      frequency: '4-hourly',
+      parameters: {
+        weight: { frequency: 'daily', time: '08:00' },
+        temperature: true,
+        heartRate: true,
+        respiratoryRate: true,
+        oxygenSaturation: true,
+        bloodPressure: false,
+      },
+      escalationCriteria: [
+        { parameter: 'Temperature', threshold: '<36.5°C or >37.5°C', action: 'Inform medical team' },
+        { parameter: 'Heart Rate', threshold: '<100 or >180 bpm', action: 'Escalate immediately' },
+      ],
+    },
+    developmentalPlan: {
+      kangarooCare: true,
+      minimumHandling: true,
+      clusteredCare: true,
+      lightReduction: true,
+      noiseReduction: true,
+    },
+    additionalInstructions: [
+      'Encourage parental involvement with feeds',
+      'Monitor for apnoeas and bradycardias',
+      'Consider transitioning to oral feeds when ready',
+    ],
+    changeHistory: [
+      {
+        date: daysAgo(1),
+        changedBy: 'emma-consultant',
+        changes: 'Increased feed volume from 35ml to 40ml',
+        reason: 'Good tolerance, appropriate weight gain',
+      },
+    ],
+    createdAt: daysAgo(1),
+    updatedAt: daysAgo(1),
+    createdBy: 'emma-consultant',
+  },
+  // Elsa's Enhanced Care Plan (version 3 - comprehensive)
+  {
+    id: 'enhanced-care-plan-elsa-v3',
+    babyId: 'elsa',
+    version: 3,
+    wardRoundDate: daysAgo(1),
+    supersedes: 'enhanced-care-plan-elsa-v2',
+    category: 'comprehensive',
+    title: 'Comprehensive Care Plan - Elsa',
+    description: 'Ventilation weaning, cautious feed advancement, line care, and intensive monitoring for 28+2 week infant',
+    prescribedBy: 'emma-consultant',
+    approvedBy: 'emma-consultant',
+    reviewDate: now(),
+    status: 'active',
+    effectiveFrom: daysAgo(1),
+    feedingPlan: {
+      frequency: 3,
+      volumePerFeed: 25,
+      feedType: 'fortified_EBM',
+      route: 'NG_tube',
+      fortification: {
+        type: 'Nutriprem Breast Milk Fortifier',
+        scoopsPer100ml: 2,
+      },
+      specialInstructions: ['Minimal feeds for gut priming', 'Hold feeds if aspirates >50% volume', 'Monitor for NEC signs'],
+      aspirateBeforeFeed: true,
+      minimumInterval: 3,
+    },
+    medicationPlan: {
+      prescriptionIds: ['caffeine-elsa', 'vitamin-d-elsa', 'benzylpenicillin-elsa', 'gentamicin-elsa'],
+      administrationGuidelines: 'IV antibiotics via UAC. Caffeine can be given in feeds. Vitamin D separate.',
+    },
+    observationPlan: {
+      frequency: '2-hourly',
+      parameters: {
+        weight: { frequency: 'daily', time: '08:00' },
+        temperature: true,
+        heartRate: true,
+        respiratoryRate: true,
+        oxygenSaturation: true,
+        bloodPressure: true,
+      },
+      escalationCriteria: [
+        { parameter: 'Temperature', threshold: '<36.2°C or >37.8°C', action: 'Immediate medical review' },
+        { parameter: 'Oxygen Saturation', threshold: '<85%', action: 'Escalate immediately' },
+        { parameter: 'Blood Pressure', threshold: 'MAP <30 mmHg', action: 'Urgent medical review' },
+      ],
+    },
+    respiratoryPlan: {
+      mode: 'SIMV',
+      settings: {
+        fiO2Target: 30,
+        peep: 6,
+        pip: 18,
+        rate: 40,
+      },
+      weaningProtocol: 'Reduce rate by 5 if pH >7.35 and pCO2 <6.5 kPa',
+      assessmentFrequency: '4-hourly blood gas',
+    },
+    proceduralPlan: {
+      lineCare: {
+        lineIds: ['uac-elsa', 'uvc-elsa'],
+        flushFrequency: 4, // 4-hourly flushes
+        dressingChangeFrequency: 7, // Weekly
+      },
+      tubeCare: {
+        tubeIds: ['ng-tube-elsa'],
+        positionCheckFrequency: 6, // 6-hourly
+      },
+      positionChanges: {
+        frequency: 3, // 3-hourly
+        positions: ['prone', 'supine', 'left lateral', 'right lateral'],
+      },
+      skinAssessments: {
+        frequency: 6, // 6-hourly
+      },
+    },
+    developmentalPlan: {
+      kangarooCare: false, // Too unstable currently
+      minimumHandling: true,
+      clusteredCare: true,
+      lightReduction: true,
+      noiseReduction: true,
+    },
+    additionalInstructions: [
+      'Strict infection control',
+      'Monitor for signs of IVH - cranial USS pending',
+      'Daily review of respiratory support',
+      'Consider surfactant if deterioration',
+      'Blood cultures if temperature instability',
+    ],
+    changeHistory: [
+      {
+        date: daysAgo(1),
+        changedBy: 'emma-consultant',
+        changes: 'Reduced ventilator rate from 45 to 40. Increased feed volume from 20ml to 25ml',
+        reason: 'Improving respiratory status. Good feed tolerance',
+      },
+    ],
+    createdAt: daysAgo(1),
+    updatedAt: daysAgo(1),
+    createdBy: 'emma-consultant',
+  },
+];
+
+// Generate Nursing Tasks (24 hours ahead from now)
+const generateTasksForBaby = (babyId: string): NursingTask[] => {
+  const carePlan = DEMO_ENHANCED_CARE_PLANS.find((cp) => cp.babyId === babyId && cp.status === 'active');
+  if (!carePlan) return [];
+
+  const prescriptions = DEMO_PRESCRIPTIONS.filter((p) => p.babyId === babyId && p.status === 'approved');
+
+  return generateAllTasks(carePlan, prescriptions, now(), 24);
+};
+
+// Generate tasks for both babies
+let allGeneratedTasks = [
+  ...generateTasksForBaby('daisy'),
+  ...generateTasksForBaby('elsa'),
+];
+
+// Mark some tasks as completed (simulate past completions)
+allGeneratedTasks = allGeneratedTasks.map((task, index) => {
+  const scheduledMillis = task.scheduledDateTime.toMillis();
+  const nowMillis = now().toMillis();
+
+  // Mark tasks from more than 2 hours ago as completed
+  if (scheduledMillis < nowMillis - 2 * 60 * 60 * 1000) {
+    return {
+      ...task,
+      status: 'completed' as const,
+      completedAt: Timestamp.fromMillis(scheduledMillis + 10 * 60 * 1000), // Completed 10 min after scheduled
+      completedBy: 'sarah-nurse',
+      completionRecordId: `${task.taskType}-record-${task.id}`,
+      completionRecordType: task.taskType === 'feeding' ? 'FeedingRecord' as const :
+                           task.taskType === 'medication' ? 'MedicationAdministration' as const :
+                           task.taskType === 'vital_signs' ? 'VitalSign' as const :
+                           'ProcedureRecord' as const,
+    };
+  }
+
+  // Mark one task as overdue for demo
+  if (index === 5 && scheduledMillis < nowMillis) {
+    return { ...task, status: 'overdue' as const };
+  }
+
+  // Mark tasks within 30 min window as 'due'
+  if (scheduledMillis >= nowMillis - 30 * 60 * 1000 && scheduledMillis <= nowMillis) {
+    return { ...task, status: 'due' as const };
+  }
+
+  return task;
+});
+
+export const DEMO_NURSING_TASKS: NursingTask[] = allGeneratedTasks;
+
+// Task Completion Summary (yesterday)
+export const DEMO_TASK_COMPLETION_SUMMARIES: TaskCompletionSummary[] = [
+  {
+    id: 'task-summary-daisy-yesterday',
+    babyId: 'daisy',
+    date: daysAgo(1),
+    shift: 'day',
+    totalTasksScheduled: 22,
+    tasksCompleted: 21,
+    tasksDeferred: 1,
+    tasksMissed: 0,
+    tasksCancelled: 0,
+    variances: [
+      {
+        taskId: 'feed-daisy-15:00',
+        taskType: 'feeding',
+        scheduledTime: Timestamp.fromDate(new Date(Date.now() - 24 * 60 * 60 * 1000 + 15 * 60 * 60 * 1000)),
+        actualTime: Timestamp.fromDate(new Date(Date.now() - 24 * 60 * 60 * 1000 + 15.5 * 60 * 60 * 1000)),
+        varianceMinutes: 30,
+        reason: 'Baby sleeping - deferred to allow rest',
+      },
+    ],
+    clinicallySignificantVariances: false,
+    escalatedToMedicalTeam: false,
+    compiledBy: 'sarah-nurse',
+    createdAt: daysAgo(1),
+  },
+  {
+    id: 'task-summary-elsa-yesterday',
+    babyId: 'elsa',
+    date: daysAgo(1),
+    shift: 'day',
+    totalTasksScheduled: 35,
+    tasksCompleted: 34,
+    tasksDeferred: 0,
+    tasksMissed: 1,
+    tasksCancelled: 0,
+    variances: [
+      {
+        taskId: 'feed-elsa-12:00',
+        taskType: 'feeding',
+        scheduledTime: Timestamp.fromDate(new Date(Date.now() - 24 * 60 * 60 * 1000 + 12 * 60 * 60 * 1000)),
+        reason: 'Feed held due to high aspirates - medical team informed',
+      },
+    ],
+    clinicallySignificantVariances: true,
+    escalatedToMedicalTeam: true,
+    compiledBy: 'sarah-nurse',
+    createdAt: daysAgo(1),
+  },
+];
+
 // Mock data store
 export const mockDataStore = {
   users: DEMO_USERS,
@@ -1697,4 +1982,7 @@ export const mockDataStore = {
   weightCharts: DEMO_WEIGHT_CHARTS,
   admissionAssessments: DEMO_ADMISSION_ASSESSMENTS,
   samples: DEMO_SAMPLES,
+  enhancedCarePlans: DEMO_ENHANCED_CARE_PLANS,
+  nursingTasks: DEMO_NURSING_TASKS,
+  taskCompletionSummaries: DEMO_TASK_COMPLETION_SUMMARIES,
 };

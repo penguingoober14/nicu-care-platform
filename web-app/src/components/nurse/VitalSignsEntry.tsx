@@ -1,23 +1,10 @@
 import React, { useState } from 'react';
-import {
-  Box,
-  Typography,
-  Paper,
-  TextField,
-  Button,
-  Grid,
-  Alert,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from '@mui/material';
+import { Box, TextField, Button, Grid, Alert } from '@mui/material';
 import { Timestamp } from 'firebase/firestore';
 import { format } from 'date-fns';
-import { mockDataStore } from '../../config/mockData';
+import { mockDataStore } from '../../data';
 import type { Baby, VitalSign } from '../../types';
+import { PageHeader, SectionCard, DataTable, Column } from '../shared';
 
 interface Props {
   baby: Baby;
@@ -51,6 +38,7 @@ export default function VitalSignsEntry({ baby }: Props) {
           : undefined,
       notes,
       createdAt: Timestamp.now(),
+      updatedAt: Timestamp.now(),
     };
 
     mockDataStore.vitalSigns.push(newVitalSign);
@@ -71,13 +59,44 @@ export default function VitalSignsEntry({ baby }: Props) {
     setNotes('');
   };
 
-  const recentVitals = mockDataStore.vitalSigns.filter((v) => v.babyId === baby.id).slice(-10);
+  const recentVitals = mockDataStore.vitalSigns.filter((v) => v.babyId === baby.id).slice(-10).reverse();
+
+  const columns: Column<VitalSign>[] = [
+    {
+      id: 'recordedAt',
+      label: 'Time',
+      format: (value) => format(value.toDate(), 'MMM dd HH:mm'),
+    },
+    {
+      id: 'weight',
+      label: 'Weight (g)',
+      format: (value) => value?.value || '-',
+    },
+    {
+      id: 'temperature',
+      label: 'Temp (°C)',
+      format: (value) => value?.value || '-',
+    },
+    {
+      id: 'heartRate',
+      label: 'HR',
+      format: (value) => value?.value || '-',
+    },
+    {
+      id: 'respiratoryRate',
+      label: 'RR',
+      format: (value) => value?.value || '-',
+    },
+    {
+      id: 'oxygenSaturation',
+      label: 'SpO2',
+      format: (value) => (value?.value ? `${value.value}%` : '-'),
+    },
+  ];
 
   return (
     <Box>
-      <Typography variant="h5" sx={{ mb: 3, fontWeight: 'bold' }}>
-        Record Vital Signs - {baby.firstName} {baby.lastName}
-      </Typography>
+      <PageHeader title={`Record Vital Signs - ${baby.firstName} ${baby.lastName}`} />
 
       {showSuccess && (
         <Alert severity="success" sx={{ mb: 2 }}>
@@ -85,7 +104,7 @@ export default function VitalSignsEntry({ baby }: Props) {
         </Alert>
       )}
 
-      <Paper sx={{ p: 3, mb: 3 }}>
+      <SectionCard sx={{ mb: 3 }}>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6} md={3}>
             <TextField
@@ -171,39 +190,16 @@ export default function VitalSignsEntry({ baby }: Props) {
             Record Vital Signs
           </Button>
         </Box>
-      </Paper>
+      </SectionCard>
 
-      <Paper sx={{ p: 3 }}>
-        <Typography variant="h6" sx={{ mb: 2 }}>
-          Recent Vital Signs
-        </Typography>
-        <TableContainer>
-          <Table size="small">
-            <TableHead>
-              <TableRow>
-                <TableCell><strong>Time</strong></TableCell>
-                <TableCell><strong>Weight (g)</strong></TableCell>
-                <TableCell><strong>Temp (°C)</strong></TableCell>
-                <TableCell><strong>HR</strong></TableCell>
-                <TableCell><strong>RR</strong></TableCell>
-                <TableCell><strong>SpO2</strong></TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {recentVitals.reverse().map((vs) => (
-                <TableRow key={vs.id}>
-                  <TableCell>{format(vs.recordedAt.toDate(), 'MMM dd HH:mm')}</TableCell>
-                  <TableCell>{vs.weight?.value || '-'}</TableCell>
-                  <TableCell>{vs.temperature?.value || '-'}</TableCell>
-                  <TableCell>{vs.heartRate?.value || '-'}</TableCell>
-                  <TableCell>{vs.respiratoryRate?.value || '-'}</TableCell>
-                  <TableCell>{vs.oxygenSaturation?.value || '-'}%</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Paper>
+      <SectionCard title="Recent Vital Signs">
+        <DataTable
+          columns={columns}
+          data={recentVitals}
+          getRowId={(row) => row.id}
+          emptyMessage="No vital signs recorded"
+        />
+      </SectionCard>
     </Box>
   );
 }

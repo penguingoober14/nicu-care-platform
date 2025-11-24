@@ -14,7 +14,7 @@ import {
   Divider,
   Button,
 } from '@mui/material';
-import { mockDataStore } from '../../config/mockData';
+import { mockDataStore } from '../../data';
 import type { Baby } from '../../types';
 
 interface TwentyFourHrResumeProps {

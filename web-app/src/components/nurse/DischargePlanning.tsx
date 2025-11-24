@@ -21,7 +21,7 @@ import {
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { mockDataStore } from '../../config/mockData';
+import { mockDataStore } from '../../data';
 import type { Baby } from '../../types';
 
 interface DischargePlanningProps {
