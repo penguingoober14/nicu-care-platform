@@ -68,6 +68,15 @@ export interface User extends Timestamped {
   isActive?: boolean;
 }
 
+export const ROLE_DISPLAY_NAMES: Record<UserRole, string> = {
+  bedside_nurse: 'Bedside Nurse',
+  consultant: 'Consultant',
+  junior_doctor: 'Junior Doctor',
+  ward_manager: 'Ward Manager',
+  physiotherapist: 'Physiotherapist',
+  parent: 'Parent',
+};
+
 export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
   bedside_nurse: ['read_patient_data', 'write_patient_data', 'administer_medication'],
   consultant: ['read_patient_data', 'write_patient_data', 'prescribe_medication', 'view_all_patients'],
