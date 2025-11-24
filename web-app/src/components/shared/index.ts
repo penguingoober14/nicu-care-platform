@@ -9,3 +9,9 @@ export type { Column } from './DataTable';
 export { StatusChip } from './StatusChip';
 export { FormDialog } from './FormDialog';
 export { PageHeader } from './PageHeader';
+
+// Quick-entry components
+export * from './quick-entry';
+
+// Widgets
+export * from './widgets';

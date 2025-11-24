@@ -28,6 +28,7 @@ import { GrowthTracking } from '../components/nurse/GrowthTracking';
 import { DischargePlanning } from '../components/nurse/DischargePlanning';
 import { InfectionLabs } from '../components/nurse/InfectionLabs';
 import { ProceduresLog } from '../components/nurse/ProceduresLog';
+import EpisodeTracker from '../components/nurse/EpisodeTracker';
 import LogoutIcon from '@mui/icons-material/Logout';
 import type { Baby } from '../types';
 
@@ -127,6 +128,7 @@ export default function NurseDashboard() {
             <Tab label="Discharge" />
             <Tab label="Infection & Labs" />
             <Tab label="Procedures" />
+            <Tab label="Episodes (A/B/D)" />
           </Tabs>
 
           <CardContent sx={{ minHeight: '60vh' }}>
@@ -142,6 +144,7 @@ export default function NurseDashboard() {
             {activeTab === 9 && <DischargePlanning baby={selectedBaby} />}
             {activeTab === 10 && <InfectionLabs baby={selectedBaby} />}
             {activeTab === 11 && <ProceduresLog baby={selectedBaby} />}
+            {activeTab === 12 && <EpisodeTracker baby={selectedBaby} />}
           </CardContent>
         </Card>
       </Container>
