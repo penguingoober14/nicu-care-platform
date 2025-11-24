@@ -184,6 +184,13 @@ export interface NursingTask {
   windowStart?: Timestamp; // "Can be done from..."
   windowEnd?: Timestamp; // "Must be done by..."
 
+  // Shift Assignment
+  shift?: {
+    type: 'day' | 'night' | 'long_day';
+    date: Timestamp; // Shift date (start date for night shifts)
+    shiftId: string; // Unique identifier for this shift instance
+  };
+
   // Recurrence (for series identification)
   recurrencePattern?: {
     frequency: 'once' | 'hourly' | '2-hourly' | '3-hourly' | '4-hourly' | 'daily';
