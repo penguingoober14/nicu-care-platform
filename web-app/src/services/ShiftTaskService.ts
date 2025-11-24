@@ -1,8 +1,7 @@
 import { Timestamp } from 'firebase/firestore';
-import type { Baby, MedicationPrescription } from '../types';
+import type { Baby, MedicationPrescription, EnhancedCarePlan } from '../types';
 import type {
   NursingTask,
-  EnhancedCarePlan,
   TaskCompletionSummary,
   ShiftHandoverReport
 } from '../types/tasks';

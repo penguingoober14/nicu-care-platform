@@ -1,13 +1,12 @@
 import { Timestamp } from 'firebase/firestore';
 import type {
-  EnhancedCarePlan,
   NursingTask,
   FeedingTaskDetails,
   MedicationTaskDetails,
   VitalSignsTaskDetails,
   ProcedureTaskDetails,
 } from '../types/tasks';
-import type { MedicationPrescription } from '../types';
+import type { MedicationPrescription, EnhancedCarePlan } from '../types';
 
 /**
  * Generates feeding tasks from a care plan

@@ -29,6 +29,7 @@ import { DischargePlanning } from '../components/nurse/DischargePlanning';
 import { InfectionLabs } from '../components/nurse/InfectionLabs';
 import { ProceduresLog } from '../components/nurse/ProceduresLog';
 import EpisodeTracker from '../components/nurse/EpisodeTracker';
+import ShiftTasksView from '../components/nurse/ShiftTasksView';
 import LogoutIcon from '@mui/icons-material/Logout';
 import type { Baby } from '../types';
 
@@ -129,6 +130,7 @@ export default function NurseDashboard() {
             <Tab label="Infection & Labs" />
             <Tab label="Procedures" />
             <Tab label="Episodes (A/B/D)" />
+            <Tab label="Shift Tasks" sx={{ fontWeight: 'bold', color: 'primary.main' }} />
           </Tabs>
 
           <CardContent sx={{ minHeight: '60vh' }}>
@@ -145,6 +147,13 @@ export default function NurseDashboard() {
             {activeTab === 10 && <InfectionLabs baby={selectedBaby} />}
             {activeTab === 11 && <ProceduresLog baby={selectedBaby} />}
             {activeTab === 12 && <EpisodeTracker baby={selectedBaby} />}
+            {activeTab === 13 && (
+              <ShiftTasksView
+                babies={babies}
+                selectedBaby={selectedBaby}
+                onSelectBaby={setSelectedBaby}
+              />
+            )}
           </CardContent>
         </Card>
       </Container>
