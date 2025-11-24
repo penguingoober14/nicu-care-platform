@@ -6,6 +6,9 @@
       "**/.*",
       "**/node_modules/**"
     ],
+    "predeploy": [
+      "cd web-app && npm install && npm run build"
+    ],
     "rewrites": [
       {
         "source": "**",
