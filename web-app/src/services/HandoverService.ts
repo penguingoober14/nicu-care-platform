@@ -154,7 +154,7 @@ export class HandoverService {
     vitals: VitalSignsRecord[],
     meds: MedicationAdministration[],
     episodes: Episode[],
-    respiratory: RespiratorySupport[],
+    respiratoryRecords: RespiratorySupport[],
     lines: PeripheralCentralLineRecord[],
     tubes: NasoOrogastricTubeInsertion[],
     shift: ShiftTimes,
@@ -180,7 +180,7 @@ export class HandoverService {
       (e) => e.timestamp.toMillis() >= shift.start.toMillis() && e.timestamp.toMillis() <= shift.end.toMillis()
     );
 
-    const shiftRespiratory = respiratory.filter(
+    const shiftRespiratory = respiratoryRecords.filter(
       (r) => r.startTime.toMillis() >= shift.start.toMillis() && r.startTime.toMillis() <= shift.end.toMillis()
     );
 
