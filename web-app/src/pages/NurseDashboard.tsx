@@ -20,6 +20,14 @@ import MedicationSchedule from '../components/nurse/MedicationSchedule';
 import FeedingEntry from '../components/nurse/FeedingEntry';
 import VitalSignsEntry from '../components/nurse/VitalSignsEntry';
 import CarePlanView from '../components/nurse/CarePlanView';
+import { RespiratorySupport } from '../components/nurse/RespiratorySupport';
+import { LinesTubes } from '../components/nurse/LinesTubes';
+import { FluidBalance } from '../components/nurse/FluidBalance';
+import { TwentyFourHrResume } from '../components/nurse/TwentyFourHrResume';
+import { GrowthTracking } from '../components/nurse/GrowthTracking';
+import { DischargePlanning } from '../components/nurse/DischargePlanning';
+import { InfectionLabs } from '../components/nurse/InfectionLabs';
+import { ProceduresLog } from '../components/nurse/ProceduresLog';
 import LogoutIcon from '@mui/icons-material/Logout';
 import type { Baby } from '../types';
 
@@ -104,11 +112,21 @@ export default function NurseDashboard() {
             value={activeTab}
             onChange={(_, newValue) => setActiveTab(newValue)}
             sx={{ borderBottom: 1, borderColor: 'divider' }}
+            variant="scrollable"
+            scrollButtons="auto"
           >
             <Tab label="Medications" />
             <Tab label="Feeding" />
             <Tab label="Vital Signs" />
             <Tab label="Care Plan" />
+            <Tab label="Respiratory" />
+            <Tab label="Lines & Tubes" />
+            <Tab label="Fluid Balance" />
+            <Tab label="24hr Resume" />
+            <Tab label="Growth" />
+            <Tab label="Discharge" />
+            <Tab label="Infection & Labs" />
+            <Tab label="Procedures" />
           </Tabs>
 
           <CardContent sx={{ minHeight: '60vh' }}>
@@ -116,6 +134,14 @@ export default function NurseDashboard() {
             {activeTab === 1 && <FeedingEntry baby={selectedBaby} />}
             {activeTab === 2 && <VitalSignsEntry baby={selectedBaby} />}
             {activeTab === 3 && <CarePlanView baby={selectedBaby} />}
+            {activeTab === 4 && <RespiratorySupport baby={selectedBaby} />}
+            {activeTab === 5 && <LinesTubes baby={selectedBaby} />}
+            {activeTab === 6 && <FluidBalance baby={selectedBaby} />}
+            {activeTab === 7 && <TwentyFourHrResume baby={selectedBaby} />}
+            {activeTab === 8 && <GrowthTracking baby={selectedBaby} />}
+            {activeTab === 9 && <DischargePlanning baby={selectedBaby} />}
+            {activeTab === 10 && <InfectionLabs baby={selectedBaby} />}
+            {activeTab === 11 && <ProceduresLog baby={selectedBaby} />}
           </CardContent>
         </Card>
       </Container>

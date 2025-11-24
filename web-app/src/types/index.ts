@@ -1,30 +1,79 @@
 import { Timestamp } from 'firebase/firestore';
 
-// Re-export user types
+// Re-export all type modules
 export * from './user';
+export * from './clinical';
+export * from './procedures';
+export * from './discharge';
 
-// Baby types
+// Baby types (Extended for NHS compliance)
 export interface Baby {
   id: string;
+
+  // NHS Identifiers
+  nhsNumber?: string;
   hospitalNumber: string;
+
+  // Personal Details
   firstName?: string;
   lastName?: string;
   dateOfBirth: Timestamp;
+  sex: 'male' | 'female' | 'unknown';
+
+  // Birth Details
   gestationalAgeAtBirth: {
     weeks: number;
     days: number;
   };
-  birthWeight: number;
-  sex: 'male' | 'female' | 'unknown';
+  birthWeight: number;              // grams
+  birthLength?: number;             // cm
+  birthHeadCircumference?: number;  // cm
+
+  // Extended Birth Information
+  birthDetails?: {
+    deliveryMethod: 'SVD' | 'forceps' | 'ventouse' | 'elective_CS' | 'emergency_CS';
+    apgarScores: {
+      oneMin: number;
+      fiveMin: number;
+      tenMin?: number;
+    };
+    resuscitation: boolean;
+    resuscitationDetails?: string;
+    birthLocation: string;
+    plurality: 'singleton' | 'twin' | 'triplet' | 'quadruplet' | 'other';
+    complications?: string[];
+  };
+
+  // Maternal Links
+  motherNhsNumber?: string;
+  fatherNhsNumber?: string;
+
+  // Location
   unitId: string;
   trustId: string;
   bedNumber?: string;
+  roomNumber?: string;
+
+  // Admission
   admissionDate: Timestamp;
+  admissionDiagnoses?: string[];
+
+  // Current Status
   diagnoses: string[];
+  isActive: boolean;
+  outcomeStatus: 'inpatient' | 'discharged_home' | 'transferred' | 'deceased';
+
+  // Discharge
+  expectedDischargeDate?: Timestamp;
+  dischargeDate?: Timestamp;
+  dischargeDestination?: string;
+
+  // Care Team
   parentUserIds: string[];
   primaryNurseId?: string;
   consultantId?: string;
-  isActive: boolean;
+
+  // Metadata
   createdAt: Timestamp;
   updatedAt: Timestamp;
   createdBy: string;
